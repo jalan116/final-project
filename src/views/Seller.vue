@@ -1,5 +1,3 @@
 <template>
-    <h1>
-        Seller Page
-    </h1>
+    <h1 class="text-center text-2xl">List of Sellers and their Contact Info</h1>
 </template>
