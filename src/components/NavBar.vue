@@ -1,7 +1,8 @@
 <template> 
-    <div class="navbar mb-2 shadow-lg bg-neutral text-neutral-content rounded-box">
+    <div class="navbar mb-2 shadow-lg bg-neutral text-neutral-content">
         <div class="flex-1 px-2 mx-2 lg:flex-none">
-          <span class="text-lg font-bold">
+          <img src="../assets/garage-sale.png" width="50">
+          <span class="text-lg font-bold px-1">
                   Garage Sales Online
                 </span>
         </div> 
@@ -29,3 +30,4 @@
         </div> 
       </div>
 </template>
+

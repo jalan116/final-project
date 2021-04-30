@@ -16,7 +16,6 @@ const routes = [
     { path: '/about', component: About },
 ]
 
-
 export const router = createRouter({
     history: createWebHistory(),
     routes,

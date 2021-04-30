@@ -6,7 +6,7 @@
     <p class="text-center py-2 my-2 text-xl">While also being safe from their houses. With out further delay here is the link to the Home Page</p>
         <div>
             <router-link to="/" class="flex py-1 text-4xl bg-gray-200 rounded-md "> 
-                <div class="text-center container">Home Page</div>
+                <div class="text-center container mx-auto ">Home Page</div>
                 </router-link>
         </div>
     </div>
