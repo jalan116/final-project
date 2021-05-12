@@ -1,134 +1,61 @@
 <template>
-    <section
-      class="bg-gray-600 container flex items-center justify-center text-center rounded-xl mx-auto mt-16 max-w-md"
-    >
-      <form @submit.prevent class="flex flex-col w-full p-10 shadow-lg">
-        <label v-if="form == 'signup'" for="name" class="self-start text-xs font-semibold text-content-200">Name</label>
-
-        <input v-if="form == 'signup'" id="name" type="text" class="flex items-center h-12 px-4 mt-2 bg-gray-200 rounded focus:outline-none focus:ring-2" v-model="name"/>
-
-        <p class="capitalize text-sm text-red-500 text-left">{{ nameError }}</p>
-
-        <label for="username" class="self-start mt-3 text-xs font-semibold text-content-200 text-white">Email</label>
-
-        <input id="username" type="text" class="text-white flex items-center h-12 px-4 mt-2 bg-white rounded focus:outline-none focus:ring-2" v-model="email"/>
-
-        <p class="capitalize text-sm text-red-500 text-left">{{ errorEmail }}</p>
-        
-        <label for="password" class="text-white self-start mt-3 text-xs font-semibold text-content-200">Password</label>
-
-        <input id="password" type="password"
-          class="text-white flex items-center h-12 px-4 mt-2 bg-white rounded focus:outline-none focus:ring-2"
-          v-model="password"
-        />
-
-        <p class="capitalize text-sm text-red-500 text-left">{{ passwordError }}</p>
-  
-        <label for="passwordConfirmation" class="text-white self-start mt-3 text-xs font-semibold text-content-200">Confirm Password</label>
-
-        <input v-if="form == 'signup'" id="passwordConfirmation" type="password"
-            class="flex items-center h-12 px-4 mt-2 bg-gray-200 rounded focus:outline-none focus:ring-2" 
-            v-model="passwordConfirmation"
-        />
-
-        <p class="capitalize text-sm text-red-500 text-left">{{ passwordConfirmationError }}</p>
-  
-        <button v-if="form == 'login'" @click="login" class="btn btn-accent mt-8">Login</button>
-
-        <button v-else @click="register" class="btn btn-accent mt-8">SignUp</button>
-
-        <button @click="google" class="btn btn-primary-content mt-8">Google Signup</button>
-        
+  <div class="mx-auto max-w-2xl p-8 space-y-3 rounded-xl bg-coolGray-700 text-coolGray-800 justify-items-stretch m-10">
+      <h1 class="text-2xl font-bold text-center text-white">Login</h1>
+      <form @submit.prevent class="space-y-6 ng-untouched ng-pristine ng-valid">
+          <div class="space-y-1 text-sm">
+              <label for="username" class="block text-white">Email</label>
+              <input type="text" name="username" id="username" placeholder="Email" class="w-full px-4 py-3 rounded-md border-coolGray-300 bg-coolGray-50 text-coolGray-800" v-model="email">
+          </div>
+          <div class="space-y-1 text-sm">
+              <label for="password" class="block text-white">Password</label>
+              <input type="password" name="password" id="password" placeholder="Password" class="w-full px-4 py-3 rounded-md border-coolGray-300 bg-coolGray-50 text-coolGray-800" v-model="password">
+          </div>
+          <button  @click="login" class="block w-full p-3 text-center rounded-sm font-bold text-coolGray-50 bg-blue-600 hover:bg-blue-700">Login</button>
       </form>
-    </section>
-  </template>
+      <div class="flex items-center pt-4 space-x-1">
+          <div class="flex-1 h-px sm:w-16 bg-coolGray-300"></div>
+          <p class="px-3 text-sm text-white">Login with social accounts</p>
+          <div class="flex-1 h-px sm:w-16 bg-coolGray-300"></div>
+      </div>
+      <div class="flex justify-center space-x-4">
+        <button @click="google" class="block w-full p-3 text-center rounded-sm font-bold text-coolGray-50 bg-red-600 hover:bg-red-700">Google</button>
+      </div>
+  </div>
+</template>
 
-  <script setup>
-    import { defineProps } from 'vue'
-    import { useRouter } from 'vue-router'
-    import { useField } from 'vee-validate'
-    import * as yup from 'yup'
-    import { signIn, signUp, googlePopup, auth } from '../helpers/useAuth'
-    import { isError, msg } from '../helpers/useError'
-    const router = useRouter()
-    const login = async () => {
-      try {
-        if (emailMeta.valid && passwordMeta.valid) {
-          await signIn(email.value, password.value)
-          isError.value = false
-          router.push('/')
-        } else {
-          isError.value = true
-          msg.value = 'Invalid Values'
-        }
-      } catch (error) {
-        isError.value = true
-        msg.value = 'There was an Authentication Error'
-        console.log(error)
-      }
-    }
-    const register = async () => {
-      try {
-        if (
-          nameMeta.valid &&
-          emailMeta.valid &&
-          passwordMeta.valid &&
-          passwordConfirmationMeta.valid
-        ) {
-          await signUp(email.value, password.value)
-          const user = auth().currentUser
-          await user.updateProfile({ displayName: name.value })
-          isError.value = false
-          router.push('/')
-        } else {
-          isError.value = true
-          msg.value = 'Invalid Values'
-        }
-      } catch (error) {
-        isError.value = true
-        msg.value = 'There was an Authentication Error'
-        console.log(error)
-      }
-    }
-    const google = async () => {
-      try {
-        await googlePopup()
-        isError.value = false
-        router.push('/')
-      } catch (error) {
-        isError.value = true
-        msg.value = 'There was an Authentication Error'
-        console.log(error)
-      }
-    }
-    const { value: email, errorMessage: errorEmail, meta: emailMeta } = useField(
-      'email',
-      yup.string().required().email(),
-    )
-    const {
-      value: password,
-      errorMessage: passwordError,
-      meta: passwordMeta,
-    } = useField('password', yup.string().required().min(8))
-    const passwordConfirmationFn = () => {
-      if (password.value === passwordConfirmation.value) {
-        return true
-      }
-      return "Password doesn't Match"
-    }
-    const {
-      value: passwordConfirmation,
-      errorMessage: passwordConfirmationError,
-      meta: passwordConfirmationMeta,
-    } = useField('passwordConfirmation', passwordConfirmationFn)
-    const { value: name, errorMessage: nameError, meta: nameMeta } = useField(
-      'name',
-      yup.string().required(),
-    )
-    defineProps({
-      form: {
-        type: String,
-        default: 'login',
-      },
-    })
-    </script>
+<script setup>        
+import {ref, defineProps } from 'vue'
+import { useRouter } from 'vue-router'
+import { signIn, googlePopup } from '../helpers/useFirebase'
+
+const router = useRouter()
+
+const login = async () => {
+  try{
+      await signIn (email.value, password.value)
+      router.push('/')
+  } catch (error){
+      console.log(error)
+  }
+}
+
+const google = async () => {
+  try{
+      await googlePopup ()
+      router.push('/')
+  } catch (error){
+      console.log(error)
+  }
+}
+
+const email = ref('')
+const password = ref('')
+
+defineProps({
+  form:{
+    type: String,
+    default: 'login',
+  },
+})
+
+</script>

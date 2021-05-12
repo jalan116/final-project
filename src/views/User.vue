@@ -1,3 +1,3 @@
 <template>
-    <Form />
+    Welcome user
 </template>

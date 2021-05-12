@@ -20,9 +20,19 @@
             <router-link to="/seller" class="btn btn-ghost btn-sm rounded-btn">
                     Seller
                   </router-link>
-            <router-link to="/login" class="btn btn-ghost btn-sm rounded-btn">
-                    Login
-                  </router-link>
+            <div v-if="!isAuthenticated">
+              <router-link to="/login" class="btn btn-ghost btn-sm rounded-btn">
+                Login
+              </router-link>
+            </div>
+            <div v-else>
+              <router-link to="/user" class="btn btn-ghost btn-sm rounded-btn">
+                Welcome
+              </router-link>
+              <button to="/login" class="btn btn-ghost btn-sm rounded-btn" @click="logout">
+                Logout
+              </button>
+            </div>
             <router-link to="/about" class="btn btn-ghost btn-sm rounded-btn">
                     About Us
                   </router-link>
@@ -31,3 +41,15 @@
       </div>
 </template>
 
+<script setup>        
+import { useRouter } from 'vue-router'
+import {isAuthenticated, signOut} from '../helpers/useFirebase'
+
+const router = useRouter()
+
+const logout = async () => {
+    await signOut()
+    router.push('/')
+}
+
+</script>
